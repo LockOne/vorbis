@@ -2,7 +2,6 @@
 #include <string.h>
 #include <cstdint>
 #include <vorbis/vorbisfile.h>
-#include <stdlib.h>
 
 struct vorbis_data {
   const uint8_t *current;
@@ -22,20 +21,7 @@ size_t read_func(void *ptr, size_t size1, size_t size2, void *datasource) {
 }
 
 
-//extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-int main(int argc, char * argv[]){
-  
-  if (argc != 2) return 0;
-  FILE * inputf = fopen(argv[1], "r");
-  if (inputf == NULL) return 0;
-  fseek(inputf, 0, SEEK_END);
-  size_t Size = ftell(inputf);
-  fseek(inputf, 0, SEEK_SET);
-  
-  uint8_t * Data = (uint8_t *) malloc(Size);
-  fread(Data, 1, Size, inputf);
-  fclose(inputf);
-
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   ov_callbacks memory_callbacks = {0};
   memory_callbacks.read_func = read_func;
   vorbis_data data_st;
